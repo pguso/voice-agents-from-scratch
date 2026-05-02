@@ -1,0 +1,5 @@
+{
+  "name": "tutorial_default",
+  "style_tags": ["kind", "concise"],
+  "notes": "Edit and load in your own prompt loader — this file is a starting point."
+}

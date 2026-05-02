@@ -1,0 +1,34 @@
+# Models and runtime artifacts
+models/
+tmp/
+*.gguf
+*.onnx
+*.bin
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# uv
+.python-version
+
+# Jupyter
+.ipynb_checkpoints/

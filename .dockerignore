@@ -1,0 +1,9 @@
+.venv
+models
+tmp
+.git
+.idea
+**/__pycache__
+*.gguf
+*.onnx
+*.bin
