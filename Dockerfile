@@ -24,4 +24,4 @@ RUN uv sync --frozen --no-dev
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8765
 
-CMD ["python", "10_deployment/websocket_server.py"]
+CMD ["python", "10_deployment/legacy_local/websocket_server.py"]

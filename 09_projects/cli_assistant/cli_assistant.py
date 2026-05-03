@@ -3,6 +3,9 @@
 Two ``PromptEngine`` instances  -  strict tool router vs summarizer  -  share one
 ``AgentCore`` and ``chapter_registry.build_registry()`` from chapter 07.
 
+Uses a **Llama 3.x instruct** GGUF (``AgentCore.chat_template="llama3"``); see
+``09_projects/llama_gguf.py`` for accepted filenames.
+
 JSON extraction / argument coercion match ``07_tools/llm_tool_loop/llm_tool_loop.py``
 (teaching copy here so this file runs standalone).
 """
@@ -17,6 +20,12 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+_CH09 = ROOT / "09_projects"
+if str(_CH09) not in sys.path:
+    sys.path.insert(0, str(_CH09))
+from llama_gguf import resolve_llama_instruct_gguf
+from stream_util import stream_reply_to_console
+
 _CH07 = ROOT / "07_tools"
 if str(_CH07) not in sys.path:
     sys.path.insert(0, str(_CH07))
@@ -31,8 +40,6 @@ from voice_agents.tools.registry import ToolRegistry
 
 from calculator_tool.calculator_tool import CalcParams, calculator_eval
 from chapter_registry import build_registry
-
-LLM = ROOT / "models" / "llm" / "qwen2.5-0.5b-instruct-q4_k_m.gguf"
 
 
 def _calc_only_registry() -> ToolRegistry:
@@ -186,8 +193,11 @@ def _extract_json_object(text: str) -> dict:
 
 def main() -> None:
     console = Console()
-    if not LLM.is_file():
-        console.print("[red]Missing GGUF.[/] Run [cyan]00_start_here/download_models.py[/] first.")
+    llm_path = resolve_llama_instruct_gguf(ROOT)
+    if llm_path is None:
+        console.print(
+            "[red]No Llama 3.x instruct GGUF under models/llm/.[/] See [cyan]09_projects/llama_gguf.py[/]."
+        )
         raise SystemExit(1)
 
     ap = argparse.ArgumentParser(
@@ -206,9 +216,9 @@ def main() -> None:
     router_engine = PromptEngine(system_prompt=router_system)
     summary_engine = PromptEngine(system_prompt=_SUMMARY_SYSTEM)
 
-    agent = AgentCore(model_path=str(LLM), n_ctx=2048)
+    agent = AgentCore(model_path=str(llm_path), chat_template="llama3", n_ctx=8192)
     console.print(
-        "[dim]Tools REPL  -  each line → LLM picks JSON tool → run → short summary. "
+        "[dim]Tools REPL  -  each line → LLM streams JSON tool → run → streamed summary. "
         "Empty line, [bold]quit[/], or [bold]exit[/] to stop. "
         "[bold]--calc-only[/] shrinks the schema for debugging.[/]"
     )
@@ -219,8 +229,15 @@ def main() -> None:
             break
 
         router_engine.memory_lines.clear()
-        raw = agent.complete(q, engine=router_engine, max_tokens=256, temperature=0.05)
-        console.print("[dim]Router raw:[/]\n", raw, sep="")
+        raw = stream_reply_to_console(
+            agent,
+            q,
+            engine=router_engine,
+            console=console,
+            max_tokens=256,
+            temperature=0.05,
+            dim_lead="[dim]Router raw:[/]",
+        )
 
         try:
             spec = _extract_json_object(raw)
@@ -248,8 +265,15 @@ def main() -> None:
             f"The tool {name} returned:\n{tool_out}\n\n"
             "Write the final reply for the user following the system rules."
         )
-        answer = agent.complete(follow, engine=summary_engine, max_tokens=160, temperature=0.35)
-        console.print(f"[bold]Assistant[/]\n{answer}\n")
+        stream_reply_to_console(
+            agent,
+            follow,
+            engine=summary_engine,
+            console=console,
+            max_tokens=160,
+            temperature=0.35,
+            bold_label="Assistant",
+        )
 
 
 if __name__ == "__main__":

@@ -5,10 +5,13 @@ from __future__ import annotations
 import ctypes
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from typing import Literal
 
 from llama_cpp import Llama, llama_log_callback, llama_log_set
 
 from voice_agents.agent.prompt_engine import PromptEngine
+
+ChatTemplate = Literal["qwen25", "llama3"]
 
 
 @llama_log_callback
@@ -38,12 +41,31 @@ def qwen25_chat_prompt(system: str, user: str) -> str:
     )
 
 
+def llama3_instruct_chat_prompt(system: str, user: str) -> str:
+    """Chat template for Meta Llama 3 / 3.1 / 3.2 **instruct** GGUFs (llama.cpp raw prompt).
+
+    Do **not** prefix with ``<|begin_of_text|>`` here: ``llama_cpp.Llama.__call__`` already
+    prepends the model BOS when ``add_bos_token`` is enabled on the GGUF; duplicating that
+    token triggers ``RuntimeWarning: Detected duplicate leading "<|begin_of_text|>"...``.
+    """
+    sh = "<|start_header_id|>"
+    eh = "<|end_header_id|>"
+    eot = "<|eot_id|>"
+    return (
+        f"{sh}system{eh}\n\n{system}{eot}"
+        f"{sh}user{eh}\n\n{user}{eot}"
+        f"{sh}assistant{eh}\n\n"
+    )
+
+
 @dataclass
 class AgentCore:
     model_path: str
     n_ctx: int = 4096
     n_threads: int | None = None
     verbose: bool = False
+    # Must match the GGUF family (e.g. chapter 09 capstones use ``llama3`` for Meta Llama 3.x instruct).
+    chat_template: ChatTemplate = "qwen25"
     _llama: Llama | None = field(default=None, init=False, repr=False)
 
     def _llm(self) -> Llama:
@@ -74,9 +96,13 @@ class AgentCore:
         """Single-turn completion (blocking)."""
         eng = engine or PromptEngine()
         user_msg = eng.build_user_message(user_text)
-        prompt = qwen25_chat_prompt(eng.system_prompt, user_msg)
+        if self.chat_template == "llama3":
+            prompt = llama3_instruct_chat_prompt(eng.system_prompt, user_msg)
+            stop_tokens = stop or ["<|eot_id|>", "<|end_of_text|>"]
+        else:
+            prompt = qwen25_chat_prompt(eng.system_prompt, user_msg)
+            stop_tokens = stop or [_IM_END, "<|endoftext|>"]
         llm = self._llm()
-        stop_tokens = stop or [_IM_END, "<|endoftext|>"]
         out = llm(
             prompt,
             max_tokens=max_tokens,
@@ -102,9 +128,13 @@ class AgentCore:
         """Stream decoded token text chunks."""
         eng = engine or PromptEngine()
         user_msg = eng.build_user_message(user_text)
-        prompt = qwen25_chat_prompt(eng.system_prompt, user_msg)
+        if self.chat_template == "llama3":
+            prompt = llama3_instruct_chat_prompt(eng.system_prompt, user_msg)
+            stop_tokens = stop or ["<|eot_id|>", "<|end_of_text|>"]
+        else:
+            prompt = qwen25_chat_prompt(eng.system_prompt, user_msg)
+            stop_tokens = stop or [_IM_END, "<|endoftext|>"]
         llm = self._llm()
-        stop_tokens = stop or [_IM_END, "<|endoftext|>"]
         stream = llm(
             prompt,
             max_tokens=max_tokens,

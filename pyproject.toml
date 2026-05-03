@@ -25,6 +25,9 @@ dependencies = [
 
 [project.optional-dependencies]
 vad = ["torch>=2.0.0", "torchaudio>=2.0.0"]
+deploy = [
+    "modal>=0.73.0",
+]
 
 [project.scripts]
 voice-agent = "voice_agents.cli:main"

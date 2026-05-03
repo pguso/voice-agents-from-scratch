@@ -51,10 +51,15 @@ def transcribe_samples(
     sample_rate: int,
     *,
     config: TranscribeConfig | None = None,
+    whisper_model: WhisperModel | None = None,
 ) -> str:
-    """Transcribe in-memory mono float32 samples at ``sample_rate`` Hz."""
+    """Transcribe in-memory mono float32 samples at ``sample_rate`` Hz.
+
+    Pass ``whisper_model`` to reuse one ``WhisperModel`` across turns (avoids reload
+    latency on every recording).
+    """
     cfg = config or TranscribeConfig()
-    model = _get_model(cfg)
+    model = whisper_model if whisper_model is not None else _get_model(cfg)
     audio = np.asarray(samples, dtype=np.float32).squeeze()
     segments, _ = model.transcribe(
         audio,

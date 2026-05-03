@@ -2,6 +2,9 @@
 
 **Not** therapy, crisis support, or medical advice  -  a teaching sketch only.
 
+Uses a **Llama 3.x instruct** GGUF (``AgentCore.chat_template="llama3"``); see
+``09_projects/llama_gguf.py`` for accepted filenames.
+
 The ``hint_from_text`` function matches
 ``08_personality/emotional_responses/emotional_responses.py`` (copy here so you see
 per-turn ``engine.system_prompt = ...`` without import path tricks).
@@ -9,6 +12,7 @@ per-turn ``engine.system_prompt = ...`` without import path tricks).
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from rich.console import Console
@@ -17,8 +21,13 @@ from rich.prompt import Prompt
 from voice_agents.agent.agent_core import AgentCore
 from voice_agents.agent.prompt_engine import PromptEngine
 
+_CH09 = Path(__file__).resolve().parent.parent
+if str(_CH09) not in sys.path:
+    sys.path.insert(0, str(_CH09))
+from llama_gguf import resolve_llama_instruct_gguf
+from stream_util import stream_reply_to_console
+
 ROOT = Path(__file__).resolve().parents[2]
-LLM = ROOT / "models" / "llm" / "qwen2.5-0.5b-instruct-q4_k_m.gguf"
 
 # Base boundaries (see also full emotional_responses demo in chapter 08)
 BASE_PERSONA = (
@@ -39,16 +48,19 @@ def hint_from_text(user: str) -> str:
 
 def main() -> None:
     console = Console()
-    if not LLM.is_file():
-        console.print("Download models first (chapter 00).")
+    llm_path = resolve_llama_instruct_gguf(ROOT)
+    if llm_path is None:
+        console.print(
+            "[red]No Llama 3.x instruct GGUF under models/llm/.[/] See [cyan]09_projects/llama_gguf.py[/]."
+        )
         raise SystemExit(1)
 
-    agent = AgentCore(model_path=str(LLM))
+    agent = AgentCore(model_path=str(llm_path), chat_template="llama3", n_ctx=8192)
     engine = PromptEngine(system_prompt=BASE_PERSONA)
     console.print(
         "[dim]Listener sketch  -  not a substitute for real support. "
         "Empty line, [bold]quit[/], or [bold]exit[/] to stop. "
-        "Watch the [dim](hint -> …)[/] line each turn.[/]"
+        "Watch the [dim](hint -> …)[/] line each turn; assistant streams.[/]"
     )
     while True:
         user = Prompt.ask("You")
@@ -57,8 +69,15 @@ def main() -> None:
         hint = hint_from_text(user)
         engine.system_prompt = f"{BASE_PERSONA}\n\n{hint}"
         console.print(f"[dim](hint -> {hint})[/]")
-        reply = agent.complete(user, engine=engine, max_tokens=180, temperature=0.5)
-        console.print(f"[bold]Assistant[/] {reply}")
+        stream_reply_to_console(
+            agent,
+            user,
+            engine=engine,
+            console=console,
+            max_tokens=180,
+            temperature=0.5,
+            bold_label="Assistant",
+        )
 
 
 if __name__ == "__main__":

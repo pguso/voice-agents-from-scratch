@@ -1,4 +1,4 @@
-"""Minimal FastAPI + WebSocket JSON echo (extend with session store + STT/TTS workers)."""
+"""Minimal FastAPI + WebSocket JSON echo (optional local lab; chapter 10 uses Modal)."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ if STATIC.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 
 
-@app.get("/")
+@app.get("/", response_model=None)
 def index() -> FileResponse | PlainTextResponse:
     index_html = STATIC / "index.html"
     if index_html.is_file():
@@ -37,7 +37,6 @@ async def ws_endpoint(ws: WebSocket) -> None:
     try:
         while True:
             msg = await ws.receive_json()
-            # Expect {"type":"text","content":"..."} from client
             if msg.get("type") == "text":
                 sessions.update(sid, last_message=msg.get("content", ""))
             await ws.send_json({"type": "echo", "session_id": sid, "got": msg})

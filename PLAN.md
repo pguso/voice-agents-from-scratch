@@ -48,48 +48,130 @@ voice-agents-from-scratch/
 │   └── architecture_overview.md
 │
 ├── 01_audio_io/
-│   ├── mic_input.py
-│   ├── speaker_output.py
-│   ├── record_to_file.py
-│   └── stream_basics.py
+│   ├── README.md
+│   ├── mic_input/
+│   │   ├── mic_input.py
+│   │   └── CODE.md
+│   ├── speaker_output/
+│   │   ├── speaker_output.py
+│   │   └── CODE.md
+│   ├── record_to_file/
+│   │   ├── record_to_file.py
+│   │   └── CODE.md
+│   ├── stream_basics/
+│   │   ├── stream_basics.py
+│   │   └── CODE.md
+│   └── vad_debug/
+│       ├── vad_debug.py
+│       └── CODE.md
 │
 ├── 02_speech_to_text/
-│   ├── transcribe_once.py
-│   ├── streaming_transcription.py
-│   └── handling_partial_results.py
+│   ├── README.md
+│   ├── transcribe_once/
+│   │   ├── transcribe_once.py
+│   │   └── CODE.md
+│   ├── streaming_transcription/
+│   │   ├── streaming_transcription.py
+│   │   └── CODE.md
+│   └── handling_partial_results/
+│       ├── handling_partial_results.py
+│       └── CODE.md
 │
 ├── 03_text_to_speech/
-│   ├── basic_tts.py
-│   ├── streaming_tts.py
-│   ├── voice_profiles.py
-│   └── latency_optimization.py
+│   ├── README.md
+│   ├── basic_tts/
+│   │   ├── basic_tts.py
+│   │   └── CODE.md
+│   ├── streaming_tts/
+│   │   ├── streaming_tts.py
+│   │   └── CODE.md
+│   ├── voice_profiles/
+│   │   ├── voice_profiles.py
+│   │   └── CODE.md
+│   └── latency_optimization/
+│       ├── latency_optimization.py
+│       └── CODE.md
 │
 ├── 04_agent_core/
-│   ├── simple_agent.py
-│   ├── memory.py
-│   ├── prompt_engine.py
-│   └── response_loop.py
+│   ├── README.md
+│   ├── prompt_engine/
+│   │   ├── prompt_engine.py
+│   │   └── CODE.md
+│   ├── simple_agent/
+│   │   ├── simple_agent.py
+│   │   └── CODE.md
+│   ├── response_loop/
+│   │   ├── response_loop.py
+│   │   └── CODE.md
+│   ├── memory/
+│   │   ├── memory.py
+│   │   └── CODE.md
+│   └── debug_flow/
+│       ├── debug_flow.py
+│       └── CODE.md
 │
 ├── 05_full_voice_loop/
-│   ├── blocking_voice_agent.py      # simple but slow
-│   ├── streaming_voice_agent.py     # real experience
-│   └── debug_latency.py
+│   ├── README.md
+│   ├── blocking_voice_agent/
+│   │   ├── blocking_voice_agent.py
+│   │   └── CODE.md
+│   ├── streaming_voice_agent/
+│   │   ├── streaming_voice_agent.py
+│   │   └── CODE.md
+│   └── debug_latency/
+│       ├── debug_latency.py
+│       └── CODE.md
 │
 ├── 06_real_time_systems/
-│   ├── interruption_handling.py
-│   ├── turn_taking.py
-│   ├── voice_activity_detection.py
-│   └── duplex_conversation.py
+│   ├── README.md
+│   ├── _model_paths.py
+│   ├── _audio_chunks.py
+│   ├── turn_taking/
+│   │   ├── turn_taking.py
+│   │   └── CODE.md
+│   ├── duplex_conversation/
+│   │   ├── duplex_conversation.py
+│   │   └── CODE.md
+│   ├── voice_activity_detection/
+│   │   ├── voice_activity_detection.py
+│   │   └── CODE.md
+│   ├── interruption_handling/
+│   │   ├── interruption_handling.py
+│   │   └── CODE.md
 │
 ├── 07_tools/
-│   ├── tool_router.py
-│   ├── weather_tool.py
-│   └── web_search_tool.py
+│   ├── README.md
+│   ├── chapter_registry.py
+│   ├── calculator_tool/
+│   │   ├── calculator_tool.py
+│   │   └── CODE.md
+│   ├── time_tool/
+│   │   ├── time_tool.py
+│   │   └── CODE.md
+│   ├── weather_tool/
+│   │   ├── weather_tool.py
+│   │   └── CODE.md
+│   ├── web_search_tool/
+│   │   ├── web_search_tool.py
+│   │   └── CODE.md
+│   ├── tool_router/
+│   │   ├── tool_router.py
+│   │   └── CODE.md
+│   └── llm_tool_loop/
+│       ├── llm_tool_loop.py
+│       └── CODE.md
 │
 ├── 08_personality/
-│   ├── voice_style_engine.py
-│   ├── emotional_responses.py
-│   └── pacing_and_pauses.py
+│   ├── personality.json
+│   ├── emotional_responses/
+│   │   ├── emotional_responses.py
+│   │   └── CODE.md
+│   ├── pacing_and_pauses/
+│   │   ├── pacing_and_pauses.py
+│   │   └── CODE.md
+│   └── voice_style_engine/
+│       ├── voice_style_engine.py
+│       └── CODE.md
 │
 ├── 09_projects/
 │   ├── voice_tutor/
@@ -97,9 +179,12 @@ voice-agents-from-scratch/
 │   └── cli_assistant/
 │
 ├── 10_deployment/
-│   ├── cli.py
-│   ├── websocket_server.py
-│   └── browser_client/              # vanilla HTML + Web Audio API
+│   ├── modal_app.py                 # Modal: Llama-2 GGUF + Kokoro + FastAPI ASGI
+│   ├── run_modal_instructions.py    # local launcher text for voice-agent menu
+│   ├── legacy_local/
+│   │   ├── websocket_server.py      # optional local echo + static client
+│   │   └── browser_client/
+│   └── modal_chapter/CODE.md
 │
 ├── src/voice_agents/                # reusable library (importable package)
 │   ├── audio/
@@ -166,7 +251,7 @@ We define “from scratch” as **minimal abstraction, maximum visibility** - bu
 | Layer | Technology Choices |
 |-------|-------------------|
 | **Runtime** | Python 3.11+ |
-| **Package manager** | [uv](https://docs.astral.sh/uv/) — `uv sync` manages the venv and lockfile |
+| **Package manager** | [uv](https://docs.astral.sh/uv/) - `uv sync` manages the venv and lockfile |
 | **Audio I/O** | `sounddevice` (PortAudio in wheels) + `numpy` + `soundfile` |
 | **STT** | [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (CTranslate2, local) |
 | **VAD** | [silero-vad](https://github.com/snakers4/silero-vad) (Python package, ONNX) |
@@ -246,7 +331,7 @@ We define “from scratch” as **minimal abstraction, maximum visibility** - bu
 - [ ] Simple echo / template agent
 - [ ] LLM via `llama-cpp-python` (chat template, streaming tokens)
 - [ ] Basic memory: name, last topic
-- [ ] `debug_flow.py`: log input → STT → LLM → TTS → output
+- [ ] `debug_flow.py`: text-only — prompt tail (`qwen25_chat_prompt`) → LLM reply (isolates brain vs chapter 05 pipeline)
 
 ---
 
@@ -263,18 +348,17 @@ We define “from scratch” as **minimal abstraction, maximum visibility** - bu
 
 - [ ] Full-duplex: interrupt mid-speech
 - [ ] Barge-in (VAD + cancel playback)
-- [ ] Turn-taking
-- [ ] `echo_mode.py`: dev view — transcript, “thoughts”, speech state
+- [ ] Turn-taking (Rich session panel: transcript, speech state)
 
 ---
 
 ### `07_tools/` - Agent with Tools
 
 - [ ] Tool registry with JSON Schema (`pydantic`)
-- [ ] Examples: `weather_tool.py`, `calculator_tool.py`, `time_tool.py`
+- [ ] Examples: `weather_tool/weather_tool.py`, `calculator_tool/calculator_tool.py`, `time_tool/time_tool.py`
 - [ ] LLM-driven tool calls; async execution and errors
 
-> Design: `src/voice_agents/tools/registry.py` + `07_tools/examples/*.py`
+> Design: `src/voice_agents/tools/registry.py` + `07_tools/<example>/<example>.py`
 
 ---
 
@@ -284,6 +368,8 @@ We define “from scratch” as **minimal abstraction, maximum visibility** - bu
 - [ ] Personality config (`personality.json`)
 - [ ] Simple sentiment → tone (optional TTS prosody later)
 - [ ] User modeling over time (e.g. formality)
+
+> Design: `08_personality/<example>/<example>.py` + `CODE.md` (see `voice_style_engine/`, `emotional_responses/`, `pacing_and_pauses/`)
 
 ---
 
@@ -302,13 +388,11 @@ Each project is a **capstone** that combines all layers.
 
 ---
 
-### `10_deployment/` - Ship It
+### `10_deployment/` - Ship It (Modal)
 
-- [ ] CLI: Typer entrypoint (`uv run start` or `voice-agent` script in `pyproject.toml`)
-- [ ] WebSocket server for browser/mobile
-- [ ] `browser_client/`: minimal HTML + mic
-- [ ] Dockerfile
-- [ ] Raspberry Pi notes for embedded use
+- [ ] **Modal.com** app ([`10_deployment/modal_app.py`](10_deployment/modal_app.py)): **FastAPI** ASGI, **`llama-cpp-python`** on **TheBloke/Llama-2-7B-Chat-GGUF** (Q4_K_M), **kokoro-onnx**, **Modal Volume** for cached weights
+- [ ] **`uv sync --extra deploy`** for the `modal` CLI; docs in [`10_deployment/README.md`](10_deployment/README.md) and [`10_deployment/modal_chapter/CODE.md`](10_deployment/modal_chapter/CODE.md)
+- [ ] **Dockerfile** — optional local stack; see **legacy** WebSocket echo under [`10_deployment/legacy_local/`](10_deployment/legacy_local/)
 
 ---
 
@@ -318,7 +402,6 @@ Each project is a **capstone** that combines all layers.
 |---------|-------------|
 | `uv run start` (or project script name in `pyproject.toml`) | Interactive tutorial across chapters (`questionary`) |
 | `debug_latency.py` | Measures and logs all latency stages |
-| `echo_mode.py` | Live dev view of agent state |
 | `fallback_handler.py` | Mic errors, STT failures, TTS edge cases |
 | `CONTRIBUTING.md` | How to add tools, voices, projects |
 
@@ -345,7 +428,7 @@ Each project is a **capstone** that combines all layers.
 | **Become the go-to learning resource** | Companion guide: *Building Voice AI from Scratch* |
 | **Enable community contributions** | `PROJECT_WISHLIST.md`, `CONTRIBUTING.md` |
 | **Cross-platform** | Browser + Raspberry Pi guides |
-| **Great first impression** | Flawless `00_start_here` — 2-command run after `uv` |
+| **Great first impression** | Flawless `00_start_here` - 2-command run after `uv` |
 | **Inspire real products** | Extend to apps, robots, wearables |
 
 ---
@@ -378,12 +461,12 @@ We invite:
 
 ## Next Steps (Your To-Do)
 
-1. **Keep `PLAN.md`** — compass and roadmap.
-2. **Write `00_start_here/README.md`** — stack, 2-command flow, `llama-cpp-python` wheels.
-3. **Implement `run_first_voice_agent.py`** + `download_models.py` — reliable first run.
+1. **Keep `PLAN.md`** - compass and roadmap.
+2. **Write `00_start_here/README.md`** - stack, 2-command flow, `llama-cpp-python` wheels.
+3. **Implement `run_first_voice_agent.py`** + `download_models.py` - reliable first run.
 4. **Add Mermaid** to `architecture_overview.md` (diagram below).
-5. **`pyproject.toml`** — deps + `uv run` script for interactive start.
-6. **`debug_latency.py`** — colored stages with `rich`.
+5. **`pyproject.toml`** - deps + `uv run` script for interactive start.
+6. **`debug_latency.py`** - colored stages with `rich`.
 
 ---
 
@@ -412,7 +495,7 @@ Just say: _“Let’s build `run_first_voice_agent.py`.”_
 
 ---
 
-**`PLAN.md` lives at the repo root** — compass, pitch, and roadmap.
+**`PLAN.md` lives at the repo root** - compass, pitch, and roadmap.
 
 When you’re ready:
 - Draft `architecture_overview.md`

@@ -23,7 +23,7 @@ _CHAPTERS: list[tuple[str, str]] = [
     ("05 - Blocking voice loop", "05_full_voice_loop/blocking_voice_agent/blocking_voice_agent.py"),
     ("05 - Streaming voice agent", "05_full_voice_loop/streaming_voice_agent/streaming_voice_agent.py"),
     ("05 - Latency debug", "05_full_voice_loop/debug_latency/debug_latency.py"),
-    ("10 - WebSocket server", "10_deployment/websocket_server.py"),
+    ("10 - Modal deploy (instructions)", "10_deployment/run_modal_instructions.py"),
 ]
 
 
