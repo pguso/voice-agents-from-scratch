@@ -2613,7 +2613,6 @@ name = "voice-agents-from-scratch"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "fastapi" },
     { name = "faster-whisper" },
     { name = "httpx" },
     { name = "huggingface-hub" },
@@ -2627,13 +2626,16 @@ dependencies = [
     { name = "sounddevice" },
     { name = "soundfile" },
     { name = "typer" },
-    { name = "uvicorn", extra = ["standard"] },
-    { name = "websockets" },
 ]
 
 [package.optional-dependencies]
 deploy = [
     { name = "modal" },
+]
+serve = [
+    { name = "fastapi" },
+    { name = "uvicorn", extra = ["standard"] },
+    { name = "websockets" },
 ]
 vad = [
     { name = "torch" },
@@ -2642,7 +2644,7 @@ vad = [
 
 [package.metadata]
 requires-dist = [
-    { name = "fastapi", specifier = ">=0.115.0" },
+    { name = "fastapi", marker = "extra == 'serve'", specifier = ">=0.115.0" },
     { name = "faster-whisper", specifier = ">=1.0.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "huggingface-hub", specifier = ">=0.24.0" },
@@ -2659,10 +2661,10 @@ requires-dist = [
     { name = "torch", marker = "extra == 'vad'", specifier = ">=2.0.0" },
     { name = "torchaudio", marker = "extra == 'vad'", specifier = ">=2.0.0" },
     { name = "typer", specifier = ">=0.12.0" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.32.0" },
-    { name = "websockets", specifier = ">=13.0" },
+    { name = "uvicorn", extras = ["standard"], marker = "extra == 'serve'", specifier = ">=0.32.0" },
+    { name = "websockets", marker = "extra == 'serve'", specifier = ">=13.0" },
 ]
-provides-extras = ["vad", "deploy"]
+provides-extras = ["vad", "serve", "deploy"]
 
 [[package]]
 name = "watchfiles"

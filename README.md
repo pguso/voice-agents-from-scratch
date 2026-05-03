@@ -24,7 +24,8 @@ Build **real-time voice agents** from the ground up - microphone → **STT** →
 Some lessons use extra dependency groups:
 
 - **`vad`**  -  PyTorch + torchaudio for voice-activity and related examples (`uv sync --extra vad`).
-- **`deploy`**  -  Modal client if you extend the project toward hosted deployment (`uv sync --extra deploy`).
+- **`serve`**  -  FastAPI + Uvicorn + websockets for the local WebSocket server / browser client (`uv sync --extra serve`).
+- **`deploy`**  -  Modal client for hosted deployment in chapter 10 (`uv sync --extra deploy`); combine with `serve` to run the ASGI app locally too.
 
 ---
 
@@ -47,10 +48,11 @@ cd voice-agents-from-scratch
 uv sync
 ```
 
-Install optional groups only when you need them (you can combine extras, e.g. `uv sync --extra vad --extra deploy`).
+Install optional groups only when you need them (you can combine extras, e.g. `uv sync --extra vad --extra serve --extra deploy`).
 
 ```bash
 uv sync --extra vad
+uv sync --extra serve
 uv sync --extra deploy
 ```
 
